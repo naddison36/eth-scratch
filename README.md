@@ -2,5 +2,13 @@
 
 A collection of ScratchX extensions.
 
+## Extensions Blocks
+* [Weather Reporter](https://naddison36.github.io/eth-scratch/weatherReporterBlock.js)
+
 ## Useful links
-* [ScratchX documentation](https://github.com/LLK/scratchx/wiki#introduction)
+* [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)
+* [ScratchX Editor](http://scratchx.org/#scratch)
+* [GitHub Pages](https://naddison36.github.io/eth-scratch) site for these extensions 
+
+## Cross-Site Scripting
+In order to get around the Browser's [cross-site scripting](https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)) rules, ScratchX blocks can be loaded from GitHub Pages with a [crossdomain.xml](./crossdomain.xml) file in the GitHub user's repository, not this project repository. eg [naddison36/naddison36.github.io](https://naddison36/naddison36.github.io/crossdomain.xml). See [Setting up crossdomain.xml](https://github.com/LLK/scratchx/wiki#setting-up-crossdomainxml) for more details.
