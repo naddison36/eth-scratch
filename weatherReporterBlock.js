@@ -9,13 +9,17 @@
     };
 
     ext.get_temp = function(location, callback) {
+        console.log(`about to get temp for ${location}`);
+
         // Make an AJAX call to the Open Weather Maps API
         $.ajax({
-            //   url: 'http://api.openweathermap.org/data/2.5/weather?q='+location+'&units=imperial',
-            url: 'https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22',
-              dataType: 'jsonp',
+            // using https://cors.io/ to get around Cross-Origin Resource Sharing
+            // the browser will not let scratchx.org access other domains like samples.openweathermap.org
+            url: 'https://cors.io/?https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22',
+              dataType: 'json',
+              jsonp: false,
               success: function( weather_data ) {
-                    console.log(`weather data: ${weather_data}`)
+                  console.log(`weather data: ${JSON.stringify(weather_data)}`);
 
                   // Got the data - parse it and return the temperature
                   temperature = weather_data['main']['temp'];
