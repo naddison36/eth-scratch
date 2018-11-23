@@ -1,0 +1,26 @@
+{
+  "name": "eth-scratch",
+  "version": "0.0.1",
+  "description": "Scratch extension for Ethereum integration",
+  "main": "eth\tBlock.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naddison36/eth-scratch.git"
+  },
+  "keywords": [
+    "Scratch",
+    "Ethereum"
+  ],
+  "author": "Nick Addison",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/naddison36/eth-scratch/issues"
+  },
+  "homepage": "https://github.com/naddison36/eth-scratch#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "^2.0.0"
+  }
+}

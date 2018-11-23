@@ -2,7 +2,233 @@
 
     let network = 'Ropsten';
     let tokenAddress = '0x';
+    let tokenContract;
+    let tokenDecimals = 0;
     let web3Client;
+
+    // minimum ABI to of ERC20 Token
+    const tokenABI = [
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "name",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_spender",
+                    "type": "address"
+                },
+                {
+                    "name": "_value",
+                    "type": "uint256"
+                }
+            ],
+            "name": "approve",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "name": "_to",
+                    "type": "address"
+                },
+                {
+                    "name": "_value",
+                    "type": "uint256"
+                }
+            ],
+            "name": "transferFrom",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "decimals",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint8"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_owner",
+                    "type": "address"
+                }
+            ],
+            "name": "balanceOf",
+            "outputs": [
+                {
+                    "name": "balance",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "symbol",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_to",
+                    "type": "address"
+                },
+                {
+                    "name": "_value",
+                    "type": "uint256"
+                }
+            ],
+            "name": "transfer",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_owner",
+                    "type": "address"
+                },
+                {
+                    "name": "_spender",
+                    "type": "address"
+                }
+            ],
+            "name": "allowance",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "payable": true,
+            "stateMutability": "payable",
+            "type": "fallback"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "owner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "spender",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "name": "value",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Approval",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "from",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "name": "value",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Transfer",
+            "type": "event"
+        }
+    ];
 
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {};
@@ -50,18 +276,40 @@
             })
         }
         else if (balanceType === 'Token') {
-            // TODO
-            console.error('Get Token balance has not been implemented');
-            callback(3);
+            getTokenBalance(address, callback);
         }
         else {
             console.error(`Failed to get balance of type ${balanceType}. Type must be either Ether or Token`);
         }
     };
 
+    function getTokenBalance(walletAddress, callback) {
+
+        const description = `token balance of wallet address ${walletAddress} for token contract ${tokenAddress}`;
+
+        console.log(`About to get ${description}`);
+
+        // Call balanceOf function
+        tokenContract.balanceOf(walletAddress, (err, balance) => {
+
+            if(err) {
+                const error = new Error(`Failed to get ${description}. Error: ${err.message}`);
+                console.error(error.message);
+                return callback(error);
+            }
+
+            // calculate a balance = 10 ^ decimals
+            balance = balance.div(10 ** tokenDecimals).toString();
+
+            console.log(`Got ${balance} ${description}`);
+
+            callback(balance);
+        });
+    }
+
     ext.send = function(amount, type, toAddress, callback) {
 
-        const description = `send ${amount} ${type} to ${toAddress}`;
+        const description = `send ${amount} ${type}s to ${toAddress}`;
 
         console.log(`About to ${description}`);
 
@@ -75,8 +323,20 @@
                 if (err) {
                     console.error(`Failed to ${description}. Error: ${err}`);
                 }
+                
                 callback(null, transactionHash);
             })
+        }
+        else if (type == 'Token') {
+            tokenContract.transfer(toAddress, amount, (error, transactionHash) => {
+                
+                console.log(`Got ${transactionHash} for ${description}`);
+
+                callback(null, transactionHash);
+              });
+        }
+        else {
+            console.error(`Failed to ${description}. Type must be either Ether or Token`);
         }
     };
 
@@ -86,7 +346,19 @@
         }
         else {
             tokenAddress = _tokenAddress;
-            console.log(`Set token address to ${_tokenAddress}`)
+            console.log(`Set token address to ${_tokenAddress}`);
+
+            // Get ERC20 Token contract instance
+            tokenContract = web3Client.eth.contract(tokenABI).at(tokenAddress);
+
+            // TODO Get decimals
+            // tokenContract.decimals((error, decimals) => {
+            //     // calculate a balance
+            //     balance = balance.div(10**decimals).toString();
+            //     console.log(balance);
+
+            //     callback(null, balance);
+            // });
         }
     };
 
