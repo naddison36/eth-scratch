@@ -307,9 +307,9 @@
         });
     }
 
-    ext.send = function(amount, type, toAddress, callback) {
+    ext.trasnfer = function(amount, type, toAddress, callback) {
 
-        const description = `send ${amount} ${type}s to ${toAddress}`;
+        const description = `transfer ${amount} ${type}s to ${toAddress}`;
 
         console.log(`About to ${description}`);
 
@@ -338,6 +338,34 @@
         else {
             console.error(`Failed to ${description}. Type must be either Ether or Token`);
         }
+    };
+
+    ext.trasnferFrom = function(fromAddress, toAddress, amount, callback) {
+
+        const description = `transfer from address ${fromAddress} to ${toAddress} ${amount} tokens`;
+
+        console.log(`About to ${description}`);
+
+        tokenContract.transferFrom(fromAddress, toAddress, amount, (error, transactionHash) => {
+            
+            console.log(`Got ${transactionHash} for ${description}`);
+
+            callback(null, transactionHash);
+        });
+    };
+
+    ext.approve = function(spender, amount, callback) {
+
+        const description = `approve address ${spender} to spend ${amount} tokens`;
+
+        console.log(`About to ${description}`);
+
+        tokenContract.approve(spender, amount, (error, transactionHash) => {
+            
+            console.log(`Got ${transactionHash} for ${description}`);
+
+            callback(null, transactionHash);
+        });
     };
 
     ext.setTokenAddress = function(_tokenAddress) {
@@ -385,7 +413,9 @@
     const descriptor = {
         blocks: [
             ['R', '%m.balanceType balance of address %s', 'getBalance', 'Token', '0xF1BDa9086904aEDE7C3DA6964AA400b8e13Ea51C'],
-            ['w', 'Send %s %m.balanceType to address %s', 'send', '0', 'Token', '0x'],
+            ['w', 'Transfer %s %m.balanceType to address %s', 'transfer', '0', 'Token', '0x'],
+            ['w', 'Transfer from address %s to address %s %s tokens', 'transferFrom', '0x', '0x', 0],
+            ['w', 'Approve address %s to spend %s tokens', 'approve', '0x', 0],
             [' ', 'Set token address %s', 'setTokenAddress', 'tokenAddress'],
             ['R', 'Network name', 'getNetwork'],
         ],
