@@ -1,6 +1,5 @@
 (function(ext) {
 
-    let network = 'Ropsten';
     let tokenAddress = '0x';
     let tokenContract;
     let tokenDecimals = 0;
@@ -66,6 +65,10 @@
 
         const description = `token balance of wallet address ${walletAddress} for token contract ${tokenAddress}`;
 
+        if (!tokenContract) {
+            console.error(`Failed to get ${description}. set token address must be called first`)
+        }
+
         console.log(`About to get ${description}`);
 
         // Call balanceOf function
@@ -108,6 +111,10 @@
         }
         else if (type == 'Token') {
 
+            if (!tokenContract) {
+                console.error(`Failed to ${description}. set token address must be called first`)
+            }
+
             tokenContract.transfer(toAddress, amount, (err, transactionHash) => {
 
                 if (err) {
@@ -128,6 +135,10 @@
 
         const description = `transfer from address ${fromAddress} to ${toAddress} ${amount} tokens`;
 
+        if (!tokenContract) {
+            console.error(`Failed to ${description}. set token address must be called first`)
+        }
+
         console.log(`About to ${description}`);
 
         tokenContract.transferFrom(fromAddress, toAddress, amount, (err, transactionHash) => {
@@ -145,6 +156,10 @@
     ext.approve = function(spender, amount, callback) {
 
         const description = `approve address ${spender} to spend ${amount} tokens`;
+
+        if (!tokenContract) {
+            console.error(`Failed to ${description}. set token address must be called first`)
+        }
 
         console.log(`About to ${description}`);
 
@@ -164,6 +179,10 @@
 
         const description = `mint ${amount} tokens to account ${toAddress}`;
 
+        if (!tokenContract) {
+            console.error(`Failed to ${description}. set token address must be called first`)
+        }
+        
         console.log(`About to ${description}`);
 
         tokenContract.mint(toAddress, amount, (err, transactionHash) => {
@@ -254,7 +273,6 @@
         ],
         menus: {
             balanceType: ['Ether', 'Token'],
-            // network: ['Main net', 'Ropsten', 'Kovan', 'Rinkeby'],
         },
     };
 

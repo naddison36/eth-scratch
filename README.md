@@ -1,6 +1,6 @@
 # ScratchX Experimental Extensions
 
-A collection of ScratchX extensions.
+A ScratchX extensions for connecting to the Ethereum blockchain and ERC20 token contracts.
 
 ## Ethereum Extension Block
 
