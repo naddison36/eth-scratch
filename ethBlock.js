@@ -368,6 +368,20 @@
         });
     };
 
+    ext.mint = function(amount, toAddress, callback) {
+
+        const description = `mint ${amount} tokens to account ${toAddress}`;
+
+        console.log(`About to ${description}`);
+
+        tokenContract.mint(spender, amount, (error, transactionHash) => {
+            
+            console.log(`Got ${transactionHash} for ${description}`);
+
+            callback(null, transactionHash);
+        });
+    };
+
     ext.setTokenAddress = function(_tokenAddress) {
         if (!_tokenAddress || _tokenAddress == '' || _tokenAddress == '0x') {
             console.error(`Failed to set token address to "${_tokenAddress}"`)
@@ -416,6 +430,7 @@
             ['w', 'Transfer %s %m.balanceType to address %s', 'transfer', '0', 'Token', '0x'],
             ['w', 'Transfer from address %s to address %s %s tokens', 'transferFrom', '0x', '0x', 0],
             ['w', 'Approve address %s to spend %s tokens', 'approve', '0x', 0],
+            ['w', 'Mint %s tokens to address %s', 'mint', 0, '0x'],
             [' ', 'Set token address %s', 'setTokenAddress', 'tokenAddress'],
             ['R', 'Network name', 'getNetwork'],
         ],

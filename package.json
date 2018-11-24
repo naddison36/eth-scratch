@@ -1,11 +1,8 @@
 {
   "name": "eth-scratch",
   "version": "0.0.1",
-  "description": "Scratch extension for Ethereum integration",
-  "main": "eth\tBlock.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "Scratch extension for Ethereum",
+  "main": "ethBlock.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/naddison36/eth-scratch.git"
