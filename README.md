@@ -2,6 +2,10 @@
 
 A ScratchX extension for connecting to the Ethereum blockchain and ERC20 token contracts.
 
+## Scratch X
+
+[Scratch](https://scratch.mit.edu/) does not support loading custom extensions so the [ScratchX Editor](http://scratchx.org/#scratch) is used instead.
+
 ## Loading the extension
 
 The JavaScript code for the Ethereum extension is in [ethBlock.js](./ethBlock.js). This can be loaded into SctatchX in two was
@@ -21,13 +25,14 @@ In theory, you can load from an external [url](http://scratchx.org/?https://nadd
 
 ## Usage
 
-Once loaded the extension has a number of report and command blocks to get data from the Ethereum blockchain or send signed transaction via a browser wallet like [MetaMask](https://metamask.io/).
+Once loaded, the extension has a number of report and command blocks to get data from the Ethereum blockchain or send signed transaction via a browser wallet like [MetaMask](https://metamask.io/).
 
 ![ScratchX Blocks](./ScratchXBlocks.png)
 
 Before any of the ERC20 methods can be called the `Set token address` command block must be used. This will instantiate an ERC20 contract that that can then be used in the `transfer`, `transferFrom`, `approve` and `mint` command blocks. It's also needed for the `token balance` report block.
 
 The command blocks should pop up a browser wallet to sign the transaction and send them onto the Ethereum network. Here's and example for signing a token transfer using MetaMask.
+
 ![MetaMask Transfer](./MetaMaskTransfer.png)
 
 ## Useful links

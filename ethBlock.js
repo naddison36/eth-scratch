@@ -63,7 +63,7 @@
 
     function getTokenBalance(walletAddress, callback) {
 
-        const description = `token balance of wallet address ${walletAddress} for token contract ${tokenAddress}`;
+        const description = `token balance of wallet address ${walletAddress} for token contract ${tokenAddress} with ${tokenDecimals} decimals`;
 
         if (!tokenContract) {
             console.error(`Failed to get ${description}. set token address must be called first`)
@@ -207,16 +207,54 @@
 
             // Get ERC20 Token contract instance
             tokenContract = web3Client.eth.contract(tokenABI).at(tokenAddress);
-
-            // TODO Get decimals
-            // tokenContract.decimals((error, decimals) => {
-            //     // calculate a balance
-            //     balance = balance.div(10**decimals).toString();
-            //     console.log(balance);
-
-            //     callback(balance);
-            // });
         }
+    };
+
+    ext.whenContractTransaction = function(contractAddress) {
+        
+        const description = `watch for transactions against contract ${contractAddress}`;
+
+        // const filter = web3.eth.filter({
+        //     address: contractAddress
+        // });
+
+        // console.log(`About to ${description}`)
+
+        // filter.watch(function(err, result){
+        //     if (error) {
+        //       console.error(`Failed to ${description}. Error ${error}`);
+        //     }
+
+        //     return true;
+        // });
+
+        return false;
+    };
+
+    ext.getTokenProperty = function(tokenProperty, callback) {
+
+        const description = `${tokenProperty} for token contract ${tokenAddress}`;
+
+        if (!tokenContract) {
+            console.error(`Failed to get ${description}. set token address must be called first`)
+        }
+        
+        console.log(`About to get ${description}`);
+
+        tokenContract[tokenProperty]((err, propertyValue) => {
+            
+            if (err) {
+                console.error(`Failed to get ${description}. Error ${err}`);
+            }
+
+            console.log(`Got ${propertyValue} ${description}`);
+
+            if (tokenProperty === 'decimals') {
+                tokenDecimals = propertyValue;
+            }
+
+            callback(propertyValue.toString());
+        });
     };
 
     ext.getNetwork = function(callback) {
@@ -238,41 +276,22 @@
         })
     };
 
-    ext.whenContractTransaction = function(contractAddress) {
-        
-        const description = `watch for transactions against contract ${contractAddress}`;
-
-        const filter = web3.eth.filter({
-            address: contractAddress
-        });
-
-        console.log(`About to ${description}`)
-
-        filter.watch(function(err, result){
-            if (error) {
-              console.error(`Failed to ${description}. Error ${error}`);
-            }
-
-            return true;
-        });
-
-        return false;
-    };
-
     // Block and block menu descriptions
     const descriptor = {
         blocks: [
-            ['R', '%m.balanceType balance of address %s', 'getBalance', 'Token', '0xF1BDa9086904aEDE7C3DA6964AA400b8e13Ea51C'],
+            [' ', 'Set token address %s', 'setTokenAddress', '0x'],
             ['w', 'Transfer %s %m.balanceType to address %s', 'transfer', '0', 'Token', '0x'],
             ['w', 'Transfer from address %s to address %s %s tokens', 'transferFrom', '0x', '0x', 0],
             ['w', 'Approve address %s to spend %s tokens', 'approve', '0x', 0],
             ['w', 'Mint %s tokens to address %s', 'mint', 0, '0x'],
-            [' ', 'Set token address %s', 'setTokenAddress', 'tokenAddress'],
+            ['R', '%m.balanceType balance of address %s', 'getBalance', 'Token', '0x'],
+            ['R', 'Token %m.tokenProperties', 'getTokenProperty', 'name'],
             ['R', 'Network name', 'getNetwork'],
             ['h', 'when transaction on contract %s', 'whenContractTransaction', '0x']
         ],
         menus: {
             balanceType: ['Ether', 'Token'],
+            tokenProperties: ['decimals', 'symbol', 'name']
         },
     };
 
