@@ -20,5 +20,6 @@ These were deployed by a different account 0x05dd54992888fd2234f7e9ba6610032a0ac
 ## Gamer accounts
 
 * Baxter [0x63ED9BFe027f9e3dD3D14CA7612D02E1bfdAab03](https://ropsten.etherscan.io/address/0x63ed9bfe027f9e3dd3d14ca7612d02e1bfdaab03)
+* Baxter 2 [0x863eDDF45684043fd92AC0238218a84711b294d9](https://ropsten.etherscan.io/address/0x863eDDF45684043fd92AC0238218a84711b294d9)
 * Liam [0x365aee92aed0c56af25ac4e96e5a36af03d72d39](https://ropsten.etherscan.io/address/0x365aee92aed0c56af25ac4e96e5a36af03d72d39)
 

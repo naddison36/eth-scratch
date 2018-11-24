@@ -107,7 +107,7 @@
             })
         }
         else if (type == 'Token') {
-            
+
             tokenContract.transfer(toAddress, amount, (err, transactionHash) => {
 
                 if (err) {
@@ -124,7 +124,7 @@
         }
     };
 
-    ext.trasnferFrom = function(fromAddress, toAddress, amount, callback) {
+    ext.transferFrom = function(fromAddress, toAddress, amount, callback) {
 
         const description = `transfer from address ${fromAddress} to ${toAddress} ${amount} tokens`;
 
@@ -166,7 +166,7 @@
 
         console.log(`About to ${description}`);
 
-        tokenContract.mint(spender, amount, (err, transactionHash) => {
+        tokenContract.mint(toAddress, amount, (err, transactionHash) => {
             
             if (err) {
                 console.error(`Failed to ${description}. Error ${err}`);
