@@ -2,9 +2,22 @@
 
 A collection of ScratchX extensions.
 
-## Extensions Blocks
-* [Weather Reporter](http://scratchx.org/?https://naddison36.github.io/eth-scratch/weatherReporterBlock.js)
-* [Ether Block](http://scratchx.org/?https://naddison36.github.io/eth-scratch/ethBlock.js)
+## Ethereum Extension Block
+
+The JavaScript code for the Ethereum extension is in [ethBlock.js](./ethBlock.js). This can be loaded into SctatchX in two was
+1. From a local file
+
+Clone this repository to your local machine using
+```
+git clone https://github.com/naddison36/eth-scratch.git
+cd eth-scratch
+```
+
+Open the [ScratchX Editor](https://scratchx.org/#scratch) (you will have to allow the Flash plug-in), select the `Scripts` tab and then select `More Blocks`. Then hold the `control` button on the keyboard and click the `Load Experiental Extension` button.
+
+2. From the web
+
+In theory you can load from an external [url](http://scratchx.org/?https://naddison36.github.io/eth-scratch/ethBlock.js) but I haven't gotten that to work.
 
 ## Useful links
 * [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)

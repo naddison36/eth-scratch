@@ -423,6 +423,27 @@
         })
     };
 
+    ext.whenContractTransaction = function(contractAddress) {
+        
+        const description = `watch for transactions against contract ${contractAddress}`;
+
+        const filter = web3.eth.filter({
+            address: contractAddress
+        });
+
+        console.log(`About to ${description}`)
+
+        filter.watch(function(err, result){
+            if (error) {
+              console.error(`Failed to ${description}. Error ${error}`);
+            }
+
+            return true;
+        });
+
+        return false;
+    };
+
     // Block and block menu descriptions
     const descriptor = {
         blocks: [
@@ -433,6 +454,7 @@
             ['w', 'Mint %s tokens to address %s', 'mint', 0, '0x'],
             [' ', 'Set token address %s', 'setTokenAddress', 'tokenAddress'],
             ['R', 'Network name', 'getNetwork'],
+            ['h', 'when transaction on contract %s', 'whenContractTransaction', '0x']
         ],
         menus: {
             balanceType: ['Ether', 'Token'],
