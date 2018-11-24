@@ -12,6 +12,7 @@ The following contracts where deployed to the Ropsten network from the [0xF1BDa9
 * Money 0x187f3e16d0d76edc62b7a90a67533cbcb327e146
 * Metal 0x4a3c098d5d1422574015a55d7ad9cf904226a2e6
 * Stone 0x9b11f22baca35db98c9c823233e683a7983d55cd
+* Military 0xffc3b028e159c1d3a5a9d158f3bc60abe76f92cb
 
 These were deployed by a different account 0x05dd54992888fd2234f7e9ba6610032a0aca741c
 * Wood 0xf1fd65b4363946839259eb459ae223eeb787cb34 

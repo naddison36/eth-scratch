@@ -86,7 +86,7 @@
         });
     }
 
-    ext.trasnfer = function(amount, type, toAddress, callback) {
+    ext.transfer = function(amount, type, toAddress, callback) {
 
         const description = `transfer ${amount} ${type}s to ${toAddress}`;
 
@@ -103,15 +103,20 @@
                     console.error(`Failed to ${description}. Error: ${err}`);
                 }
                 
-                callback(null, transactionHash);
+                callback(transactionHash);
             })
         }
         else if (type == 'Token') {
-            tokenContract.transfer(toAddress, amount, (error, transactionHash) => {
+            
+            tokenContract.transfer(toAddress, amount, (err, transactionHash) => {
+
+                if (err) {
+                    console.error(`Failed to ${description}. Error ${err}`);
+                }
                 
                 console.log(`Got ${transactionHash} for ${description}`);
 
-                callback(null, transactionHash);
+                callback(transactionHash);
               });
         }
         else {
@@ -125,11 +130,15 @@
 
         console.log(`About to ${description}`);
 
-        tokenContract.transferFrom(fromAddress, toAddress, amount, (error, transactionHash) => {
+        tokenContract.transferFrom(fromAddress, toAddress, amount, (err, transactionHash) => {
+
+            if (err) {
+                console.error(`Failed to ${description}. Error ${err}`);
+            }
             
             console.log(`Got ${transactionHash} for ${description}`);
 
-            callback(null, transactionHash);
+            callback(transactionHash);
         });
     };
 
@@ -139,11 +148,15 @@
 
         console.log(`About to ${description}`);
 
-        tokenContract.approve(spender, amount, (error, transactionHash) => {
+        tokenContract.approve(spender, amount, (err, transactionHash) => {
+
+            if (err) {
+                console.error(`Failed to ${description}. Error ${err}`);
+            }
             
             console.log(`Got ${transactionHash} for ${description}`);
 
-            callback(null, transactionHash);
+            callback(transactionHash);
         });
     };
 
@@ -153,11 +166,15 @@
 
         console.log(`About to ${description}`);
 
-        tokenContract.mint(spender, amount, (error, transactionHash) => {
+        tokenContract.mint(spender, amount, (err, transactionHash) => {
             
+            if (err) {
+                console.error(`Failed to ${description}. Error ${err}`);
+            }
+
             console.log(`Got ${transactionHash} for ${description}`);
 
-            callback(null, transactionHash);
+            callback(transactionHash);
         });
     };
 
@@ -178,7 +195,7 @@
             //     balance = balance.div(10**decimals).toString();
             //     console.log(balance);
 
-            //     callback(null, balance);
+            //     callback(balance);
             // });
         }
     };
