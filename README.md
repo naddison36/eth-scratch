@@ -35,6 +35,10 @@ The command blocks should pop up a browser wallet to sign the transaction and se
 
 ![MetaMask Transfer](./MetaMaskTransfer.png)
 
+## Error handling
+
+There is no error handling with ScratchX extensions so the best that can be done is logging errors in the browser's JavaScript console. 
+
 ## Useful links
 * [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)
 * [ScratchX Editor](http://scratchx.org/#scratch)
