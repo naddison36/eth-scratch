@@ -2,6 +2,7 @@
 
     let tokenAddress = '0x';
     let tokenContract;
+    let tokenContracts = {};
     let tokenDecimals = 0;
     let web3Client;
 
@@ -31,53 +32,77 @@
     };
 
     /**
-     * Gets the Token or Ether balance for an address
-     * @param balanceType either 'Token' or 'Ether'
+     * Gets the Ether balance for an address
      * @param address can be an externally owned account or smart contract
      */
-    ext.getBalance = function(balanceType, address, callback) {
+    ext.getEtherBalance = function(address, callback) {
 
-        const description = `get ${balanceType} balance of address ${address}`;
+        const description = `get Ether balance of address ${address}`;
 
         console.log(`About to ${description}`);
 
-        if (balanceType === 'Ether') {
-            web3.eth.getBalance(address, (err, balance) => {
-                if (err) {
-                    return console.error(`Failed to ${description}. Error: ${err}`);
-                }
+        web3.eth.getBalance(address, (err, balance) => {
+            if (err) {
+                console.error(`Failed to ${description}. Error: ${err}`);
+                return callback();
+            }
 
-                const convertedBalance = web3.fromWei(balance, 'ether').toString(10);
-                console.log(`Got balance ${convertedBalance} ether (${balance.toString()} wei) for ${description}.`);
+            const convertedBalance = web3.fromWei(balance, 'ether').toString(10);
+            console.log(`Got balance ${convertedBalance} ether (${balance.toString()} wei) for ${description}.`);
 
-                callback(convertedBalance);
-            })
-        }
-        else if (balanceType === 'Token') {
-            getTokenBalance(address, callback);
-        }
-        else {
-            console.error(`Failed to get balance of type ${balanceType}. Type must be either Ether or Token`);
-        }
+            callback(convertedBalance);
+        });
     };
 
-    function getTokenBalance(walletAddress, callback) {
+    ext.sendEther = function(amount, toAddress, callback) {
+
+        const description = `send ${amount} Ether to ${toAddress}`;
+
+        console.log(`About to ${description}`);
+
+        web3Client.eth.sendTransaction({
+            from: web3.eth.coinbase,
+            to: toAddress,
+            value: web3.toWei(amount, 'ether'),
+        }, (err, transactionHash) => {
+            if (err) {
+                console.error(`Failed to ${description}. Error: ${err}`);
+                return callback();
+            }
+            
+            callback(transactionHash);
+        })
+    };
+
+    ext.getContract = function(tokenAddress) {
+
+        if (tokenContracts[tokenAddress]) {
+            return tokenContracts[tokenAddress];
+        }
+        else {
+            console.log(`Creating contract instance for address ${tokenAddress}`);
+
+            // Get ERC20 Token contract instance
+            tokenContracts[tokenAddress] = web3Client.eth.contract(tokenABI).at(tokenAddress);
+
+            return tokenContracts[tokenAddress];
+        }
+    }
+
+    ext.getTokenBalance = function(walletAddress, tokenAddress, callback) {
 
         const description = `token balance of wallet address ${walletAddress} for token contract ${tokenAddress} with ${tokenDecimals} decimals`;
 
-        if (!tokenContract) {
-            console.error(`Failed to get ${description}. set token address must be called first`)
-        }
-
         console.log(`About to get ${description}`);
+
+        const tokenContract = ext.getContract(tokenAddress);
 
         // Call balanceOf function
         tokenContract.balanceOf(walletAddress, (err, balance) => {
 
             if(err) {
-                const error = new Error(`Failed to get ${description}. Error: ${err.message}`);
-                console.error(error.message);
-                return callback(error);
+                console.error(`Failed to get ${description}. Error: ${err.message}`);
+                return callback();
             }
 
             // calculate a balance = 10 ^ decimals
@@ -89,62 +114,40 @@
         });
     }
 
-    ext.transfer = function(amount, type, toAddress, callback) {
+    ext.transfer = function(amount, toAddress, tokenAddress, callback) {
 
-        const description = `transfer ${amount} ${type}s to ${toAddress}`;
+        const description = `transfer ${amount} tokens to ${toAddress} of token contract ${tokenAddress}`;
 
         console.log(`About to ${description}`);
 
-        if (type === 'Ether') {
+        const tokenContract = ext.getContract(tokenAddress);
 
-            web3Client.eth.sendTransaction({
-                from: web3.eth.coinbase,
-                to: toAddress,
-                value: web3.toWei(amount, 'ether'),
-            }, (err, transactionHash) => {
-                if (err) {
-                    console.error(`Failed to ${description}. Error: ${err}`);
-                }
-                
-                callback(transactionHash);
-            })
-        }
-        else if (type == 'Token') {
+        tokenContract.transfer(toAddress, amount, (err, transactionHash) => {
 
-            if (!tokenContract) {
-                console.error(`Failed to ${description}. set token address must be called first`)
+            if (err) {
+                console.error(`Failed to ${description}. Error ${err}`);
+                return callback();
             }
+            
+            console.log(`Got ${transactionHash} for ${description}`);
 
-            tokenContract.transfer(toAddress, amount, (err, transactionHash) => {
-
-                if (err) {
-                    console.error(`Failed to ${description}. Error ${err}`);
-                }
-                
-                console.log(`Got ${transactionHash} for ${description}`);
-
-                callback(transactionHash);
-              });
-        }
-        else {
-            console.error(`Failed to ${description}. Type must be either Ether or Token`);
-        }
+            callback(transactionHash);
+        });
     };
 
-    ext.transferFrom = function(fromAddress, toAddress, amount, callback) {
+    ext.transferFrom = function(fromAddress, toAddress, amount, tokenAddress, callback) {
 
-        const description = `transfer from address ${fromAddress} to ${toAddress} ${amount} tokens`;
-
-        if (!tokenContract) {
-            console.error(`Failed to ${description}. set token address must be called first`)
-        }
+        const description = `transfer from address ${fromAddress} to ${toAddress} ${amount} tokens of token contract ${tokenAddress}`;
 
         console.log(`About to ${description}`);
+
+        const tokenContract = ext.getContract(tokenAddress);
 
         tokenContract.transferFrom(fromAddress, toAddress, amount, (err, transactionHash) => {
 
             if (err) {
                 console.error(`Failed to ${description}. Error ${err}`);
+                return callback();
             }
             
             console.log(`Got ${transactionHash} for ${description}`);
@@ -153,20 +156,19 @@
         });
     };
 
-    ext.approve = function(spender, amount, callback) {
+    ext.approve = function(spender, amount, tokenAddress, callback) {
 
-        const description = `approve address ${spender} to spend ${amount} tokens`;
-
-        if (!tokenContract) {
-            console.error(`Failed to ${description}. set token address must be called first`)
-        }
+        const description = `approve address ${spender} to spend ${amount} tokens of token contract ${tokenAddress}`;
 
         console.log(`About to ${description}`);
+
+        const tokenContract = ext.getContract(tokenAddress);
 
         tokenContract.approve(spender, amount, (err, transactionHash) => {
 
             if (err) {
                 console.error(`Failed to ${description}. Error ${err}`);
+                return callback();
             }
             
             console.log(`Got ${transactionHash} for ${description}`);
@@ -175,39 +177,25 @@
         });
     };
 
-    ext.mint = function(amount, toAddress, callback) {
+    ext.mint = function(amount, toAddress, tokenAddress, callback) {
 
-        const description = `mint ${amount} tokens to account ${toAddress}`;
-
-        if (!tokenContract) {
-            console.error(`Failed to ${description}. set token address must be called first`)
-        }
+        const description = `mint ${amount} tokens to account ${toAddress} of token contract ${tokenAddress}`;
         
         console.log(`About to ${description}`);
+
+        const tokenContract = ext.getContract(tokenAddress);
 
         tokenContract.mint(toAddress, amount, (err, transactionHash) => {
             
             if (err) {
                 console.error(`Failed to ${description}. Error ${err}`);
+                return callback();
             }
 
             console.log(`Got ${transactionHash} for ${description}`);
 
             callback(transactionHash);
         });
-    };
-
-    ext.setTokenAddress = function(_tokenAddress) {
-        if (!_tokenAddress || _tokenAddress == '' || _tokenAddress == '0x') {
-            console.error(`Failed to set token address to "${_tokenAddress}"`)
-        }
-        else {
-            tokenAddress = _tokenAddress;
-            console.log(`Set token address to ${_tokenAddress}`);
-
-            // Get ERC20 Token contract instance
-            tokenContract = web3Client.eth.contract(tokenABI).at(tokenAddress);
-        }
     };
 
     ext.whenContractTransaction = function(contractAddress) {
@@ -231,20 +219,19 @@
         return false;
     };
 
-    ext.getTokenProperty = function(tokenProperty, callback) {
+    ext.getTokenProperty = function(tokenProperty, tokenAddress, callback) {
 
         const description = `${tokenProperty} for token contract ${tokenAddress}`;
-
-        if (!tokenContract) {
-            console.error(`Failed to get ${description}. set token address must be called first`)
-        }
         
         console.log(`About to get ${description}`);
+
+        const tokenContract = ext.getContract(tokenAddress);
 
         tokenContract[tokenProperty]((err, propertyValue) => {
             
             if (err) {
                 console.error(`Failed to get ${description}. Error ${err}`);
+                return callback();
             }
 
             console.log(`Got ${propertyValue} ${description}`);
@@ -279,18 +266,18 @@
     // Block and block menu descriptions
     const descriptor = {
         blocks: [
-            [' ', 'Set token address %s', 'setTokenAddress', '0x'],
-            ['w', 'Transfer %s %m.balanceType to address %s', 'transfer', '0', 'Token', '0x'],
-            ['w', 'Transfer from address %s to address %s %s tokens', 'transferFrom', '0x', '0x', 0],
-            ['w', 'Approve address %s to spend %s tokens', 'approve', '0x', 0],
-            ['w', 'Mint %s tokens to address %s', 'mint', 0, '0x'],
-            ['R', '%m.balanceType balance of address %s', 'getBalance', 'Token', '0x'],
-            ['R', 'Token %m.tokenProperties', 'getTokenProperty', 'name'],
+            ['R', 'Ether balance of address %s', 'getEtherBalance', '0x'],
+            ['w', 'Transfer %s Ether to address %s', 'sendEther', '0', '0x'],
+            ['w', 'Transfer %s tokens to address %s of contract address %s', 'transfer', '0', '0x', '0x'],
+            ['w', 'Transfer from address %s to address %s %s tokens for contract %s', 'transferFrom', '0x', '0x', 0, '0x'],
+            ['w', 'Approve address %s to spend %s tokens for contract %s', 'approve', '0x', 0, '0x'],
+            ['w', 'Mint %s tokens to address %s for contract %s', 'mint', 0, '0x', '0x'],
+            ['R', 'balance of token address %s for contract %s', 'getTokenBalance', '0x', '0x'],
+            ['R', 'Token %m.tokenProperties of token contract %s', 'getTokenProperty', 'name', '0x'],
             ['R', 'Network name', 'getNetwork'],
             ['h', 'when transaction on contract %s', 'whenContractTransaction', '0x']
         ],
         menus: {
-            balanceType: ['Ether', 'Token'],
             tokenProperties: ['decimals', 'symbol', 'name']
         },
     };
