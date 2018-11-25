@@ -68,6 +68,8 @@
                 return callback();
             }
             
+            console.log(`Got transaction hash ${transactionHash} for ${description}`);
+
             callback(transactionHash);
         })
     };
@@ -127,7 +129,7 @@
                 return callback();
             }
             
-            console.log(`Got ${transactionHash} for ${description}`);
+            console.log(`Got transaction hash ${transactionHash} for ${description}`);
 
             callback(transactionHash);
         });
@@ -148,7 +150,7 @@
                 return callback();
             }
             
-            console.log(`Got ${transactionHash} for ${description}`);
+            console.log(`Got transaction hash ${transactionHash} for ${description}`);
 
             callback(transactionHash);
         });
@@ -169,7 +171,7 @@
                 return callback();
             }
             
-            console.log(`Got ${transactionHash} for ${description}`);
+            console.log(`Got transaction hash ${transactionHash} for ${description}`);
 
             callback(transactionHash);
         });
@@ -190,7 +192,7 @@
                 return callback();
             }
 
-            console.log(`Got ${transactionHash} for ${description}`);
+            console.log(`Got transaction hash ${transactionHash} for ${description}`);
 
             callback(transactionHash);
         });
@@ -239,6 +241,27 @@
             }
 
             callback(propertyValue.toString());
+        });
+    };
+
+    ext.getAllowance = function(ownerAddress, spenderAddress, tokenAddress, callback) {
+
+        const description = `token allowance of owning address ${ownerAddress} to spender address ${spenderAddress} for token contract ${tokenAddress}`;
+        
+        console.log(`About to get ${description}`);
+
+        const tokenContract = ext.getContract(tokenAddress);
+
+        tokenContract.allowance(ownerAddress, spenderAddress, (err, allowed) => {
+            
+            if (err) {
+                console.error(`Failed to get ${description}. Error ${err}`);
+                return callback();
+            }
+
+            console.log(`Got ${allowed} ${description}`);
+
+            callback(allowed.toString());
         });
     };
 
@@ -292,16 +315,17 @@
     // Block and block menu descriptions
     const descriptor = {
         blocks: [
-            ['R', 'Ether balance of address %s', 'getEtherBalance', '0x'],
-            ['w', 'Transfer %s Ether to address %s', 'sendEther', '0', '0x'],
-            ['w', 'Transfer %s tokens to address %s of contract address %s', 'transfer', '0', '0x', '0x'],
-            ['w', 'Transfer from address %s to address %s %s tokens for contract %s', 'transferFrom', '0x', '0x', 0, '0x'],
-            ['w', 'Approve address %s to spend %s tokens for contract %s', 'approve', '0x', 0, '0x'],
-            ['w', 'Mint %s tokens to address %s for contract %s', 'mint', 0, '0x', '0x'],
-            ['w', 'Deploy token contract for %s', 'deploy', 'name'],
-            ['R', 'balance of token address %s for contract %s', 'getTokenBalance', '0x', '0x'],
-            ['R', 'Token %m.tokenProperties of token contract %s', 'getTokenProperty', 'name', '0x'],
-            ['R', 'Network name', 'getNetwork'],
+            ['R', 'ether balance of address %s', 'getEtherBalance', '0x'],
+            ['w', 'send %s ether to address %s', 'sendEther', '0', '0x'],
+            ['w', 'transfer %s tokens to address %s of contract address %s', 'transfer', '0', '0x', '0x'],
+            ['w', 'transfer from address %s to address %s %s tokens for contract %s', 'transferFrom', '0x', '0x', 0, '0x'],
+            ['w', 'approve address %s to spend %s tokens for contract %s', 'approve', '0x', 0, '0x'],
+            ['w', 'mint %s tokens to address %s for contract %s', 'mint', 0, '0x', '0x'],
+            ['w', 'deploy token contract for %s', 'deploy', 'name'],
+            ['R', 'token balance of address %s for contract %s', 'getTokenBalance', '0x', '0x'],
+            ['R', 'allowance of owner address %s to spender address %s for contract %s', 'getAllowance', '0x', '0x', '0x'],
+            ['R', 'token %m.tokenProperties of contract %s', 'getTokenProperty', 'name', '0x'],
+            ['R', 'network name', 'getNetwork'],
             ['h', 'when transaction on contract %s', 'whenContractTransaction', '0x']
         ],
         menus: {

@@ -29,11 +29,26 @@ Once loaded, the extension has a number of report and command blocks to get data
 
 ![ScratchX Blocks](./ScratchXBlocks.png)
 
-Before any of the ERC20 methods can be called the `Set token address` command block must be used. This will instantiate an ERC20 contract that that can then be used in the `transfer`, `transferFrom`, `approve` and `mint` command blocks. It's also needed for the `token balance` report block.
-
-The command blocks should pop up a browser wallet to sign the transaction and send them onto the Ethereum network. Here's and example for signing a token transfer using MetaMask.
+The command blocks should pop up a browser wallet to sign the transaction and send them onto the Ethereum network. Here's an example for signing a token transfer using MetaMask. The transaction from address, gas price and gas limit are all set in the browser wallet.
 
 ![MetaMask Transfer](./MetaMaskTransfer.png)
+
+All the addresses need to be prefixed with `0x`.
+
+| Block | Notes |
+|---|---|
+| ether balance of address %s | gets the ether balance of an address which can be an externally owned account or a contract |
+| send %s ether to address %s | sends a number of ether to an address |
+| transfer %s tokens to address %s of contract address %s | assumes a contract with an ERC20 `transfer` function exists at the contract address | 
+| transfer from address %s to address %s %s tokens for contract %s | assumes a contract with an ERC20 `transferFrom` function exists at the contract address |
+| approve address %s to spend %s tokens for contract %s | assumes a contract with an ERC20 `approve` function exists at the contract address |
+| mint %s tokens to address %s for contract %s | assumes a contract with an Open Zeppelin [mint](https://openzeppelin.org/api/docs/token_ERC20_MintableToken.html#mint) function exists at the contract address. |
+| deploy token contract for %s | The name parameter is used to set both the token symbol and name |
+| token balance of address %s for contract %s | assumes a contract with an ERC20 `balanceOf` function exists at the contract address |
+| allowance of owner address %s to spender address %s | assumes a contract with an ERC20 `allowance` function exists at the contract address |
+| token %m of token contract %s | get the `name`, `symbol` or `decimals` properties of the deployed contract |
+| network name | returns the name of the network the browser wallet it connected to. This is useful for testing connectivity. |
+| when transaction on contract %s | Not currently implemented |
 
 ## Error handling
 
