@@ -89,6 +89,11 @@ In order to connect Remix to [MetaMask](https://metamask.io/), the `Enable Perso
 
 Your Ethereum account will need some Ether in order to deploy the GameToken contract and send transactions. The [MetaMask Ether Faucet](https://faucet.metamask.io) can be used to get Ether for the public test networks like Ropsten. For mainnet, you'll have to purchase Ether from a broker or exchange.
 
+## Scratch 3.0
+
+[Scratch 3.0](https://scratch.mit.edu/3faq) will be released on 2 January 2019. The update from Scratch 2.0 to 3.0 includes extensions so the old ScratchX site will be unsupported. Once the Scratch 3.0 developer guidelines have been published, this ScratchX extension will be upgraded to Scratch 3.0. See [With the upcoming Scratch 3.0, the extension structure has been completely revamped](https://scratch.mit.edu/discuss/topic/277217/?page=1) for a preview of the changes. Also see [Scratch 3.0 Extensions Specification
+](https://github.com/LLK/scratch-vm/wiki/Scratch-3.0-Extensions-Specification) on their GitHub wiki.
+
 # Useful links
 * [ScratchX Editor](http://scratchx.org/#scratch)
 * [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)
