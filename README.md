@@ -8,7 +8,7 @@ A ScratchX extension for connecting to the Ethereum blockchain and ERC20 token c
 
 ## Loading the extension
 
-The JavaScript code for the Ethereum extension is in [ethBlock.js](./ethBlock.js). This can be loaded into SctatchX in two was
+The JavaScript code for the Ethereum extension is in [ethBlock.js](./ethBlock.js). This can be loaded into SctatchX in two ways:
 1. From a local file
 
 Clone this repository to your local machine using
@@ -54,33 +54,43 @@ All the addresses need to be prefixed with `0x`.
 
 There is no error handling with ScratchX extensions so the best that can be done is logging errors in the browser's JavaScript console. 
 
-## Useful links
-* [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)
-* [ScratchX Editor](http://scratchx.org/#scratch)
-* [GitHub Pages](https://naddison36.github.io/eth-scratch) site for these extensions 
+# Ethereum
 
-## Cross-Site Scripting
-In order to get around the browser's [cross-site scripting](https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)) rules, ScratchX blocks can be loaded from GitHub Pages with a [crossdomain.xml](./crossdomain.xml) file in the GitHub user's repository, not this project repository. eg [naddison36/naddison36.github.io](https://naddison36/naddison36.github.io/crossdomain.xml). See [Setting up crossdomain.xml](https://github.com/LLK/scratchx/wiki#setting-up-crossdomainxml) for more details.
+[Ethereum](https://www.ethereum.org/) is a decentralized platform for applications that run exactly as programmed without any chance of fraud, censorship or third-party interference.
 
-## Token Contracts
+## Token Contract
 
-A simple ERC20 contract to test the integration between the Scratch extension and a token contract is [/contracts/GameToken.sol](./contracts/GameToken.sol).
+ [GameToken](./contracts/GameToken.sol) is an ERC20 compliant, token contract to test the integration between the Scratch extension and a token contract. Note the constructor only takes one string parameter which is used to set the `symbol` and `name` properties of the contract.
 
-This contract is dependent on the [Open Zeppelin](https://openzeppelin.org/) smart contract library. Run the following to install the Open Zeppelin
+The deploy block command will deploy the [GameToken](./contracts/GameToken.sol) contract that was compiled using Solidity 0.4.25 (0.4.25+commit.59dbf8f1.Emscripten.clang) with optimization enabled.
+
+## Using Remix
+
+[Remix](https://remix.ethereum.org/) is the easiest way to compile, deploy and interact with Ethereum smart contracts.
+
+The [GameToken](./contracts/GameToken.sol) contract is dependent on the [Open Zeppelin](https://openzeppelin.org/) smart contract library. Run the following to install the Open Zeppelin
 ```
 npm install openzeppelin-solidity
 ```
 
-The easiest way to compile and deploy the test token contract to a test network like Ropsten is using [Remix](https://remix.ethereum.org/). In order to be able to load all the dependent Open Zeppelin contracts in remix, [remixd](https://github.com/ethereum/remixd#remixd) can be used to connect remix running in the browser to the local filesystem where the GameToken and dependent Open Zeppelin files are found. To install and run remixd
+In order to be able to load all the dependent Open Zeppelin contracts in Remix, [remixd](https://github.com/ethereum/remixd#remixd) can be used to connect Remix running in the browser to the local filesystem where the GameToken and dependent Open Zeppelin files are found. To install and run remixd
 
 ```
 npm install -g remixd
 
-remixd -s <your full path>/eth-scratch  --remix-ide https://remix.ethereum.org
+remixd -s <your full path>/eth-scratch --remix-ide https://remix.ethereum.org
 ```
 
 See [Access your local filesystem by using RemixD](https://remix.readthedocs.io/en/latest/tutorial_remixd_filesystem.html#access-your-local-filesystem-by-using-remixd) for more details.
 
 In order to connect Remix to [MetaMask](https://metamask.io/), the `Enable Personal Mode` setting in Remix needs to be disabled.
 
-Your Ropsten account will need some Ether in order to deploy the contract and send transactions. The [MetaMask Ether Faucet](https://faucet.metamask.io) can be used to get Ropsten Ether.
+## Ether
+
+Your Ethereum account will need some Ether in order to deploy the GameToken contract and send transactions. The [MetaMask Ether Faucet](https://faucet.metamask.io) can be used to get Ether for the public test networks like Ropsten. For mainnet, you'll have to purchase Ether from a broker or exchange.
+
+# Useful links
+* [ScratchX Editor](http://scratchx.org/#scratch)
+* [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)
+* [Scratch for developers](https://scratch.mit.edu/developers)
+* [Google's Blockly](https://developers.google.com/blockly/)
