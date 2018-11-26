@@ -91,11 +91,12 @@ Your Ethereum account will need some Ether in order to deploy the GameToken cont
 
 ## Scratch 3.0
 
-[Scratch 3.0](https://scratch.mit.edu/3faq) will be released on 2 January 2019. The update from Scratch 2.0 to 3.0 includes extensions so the old ScratchX site will be unsupported. Once the Scratch 3.0 developer guidelines have been published, this ScratchX extension will be upgraded to Scratch 3.0. See [With the upcoming Scratch 3.0, the extension structure has been completely revamped](https://scratch.mit.edu/discuss/topic/277217/?page=1) for a preview of the changes. Also see [Scratch 3.0 Extensions Specification
+[Scratch 3.0](https://scratch.mit.edu/3faq) will be released on 2 January 2019. The update from Scratch 2.0 to 3.0 includes extensions so the old ScratchX site will be unsupported. Once Scratch 3.0 has been released, this ScratchX extension will be upgraded to Scratch 3.0. See [With the upcoming Scratch 3.0, the extension structure has been completely revamped](https://scratch.mit.edu/discuss/topic/277217/?page=1) for a preview of the changes. Also see [Scratch 3.0 Extensions Specification
 ](https://github.com/LLK/scratch-vm/wiki/Scratch-3.0-Extensions-Specification) on their GitHub wiki.
 
 # Useful links
 * [ScratchX Editor](http://scratchx.org/#scratch)
 * [ScratchX Documentation](https://github.com/LLK/scratchx/wiki#introduction)
 * [Scratch for developers](https://scratch.mit.edu/developers)
+* [Scratch 3.0](https://scratch.mit.edu/3faq)
 * [Google's Blockly](https://developers.google.com/blockly/)
